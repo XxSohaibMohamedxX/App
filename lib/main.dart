@@ -4,6 +4,7 @@ import './models/transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -78,8 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+        mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text('personal Expenses'),
       actions: [
@@ -90,9 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
     final txListWidget = Container(
                     height: availableHeight * 1,
@@ -112,7 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Show Chart"),
-                  Switch(
+                  Switch.adaptive(
+                    activeColor: Colors.amber,
                     value: _showChart,
                     onChanged: (val) {
                       setState(() {
