@@ -4,16 +4,41 @@ import 'package:flutter/material.dart';
 class NewTransaction extends StatefulWidget {
   final Function(String, double, DateTime) addTx;
 
-  NewTransaction(this.addTx);
+  NewTransaction(this.addTx) {
+    print('constructor New');
+  }
 
   @override
-  State<NewTransaction> createState() => _NewTransactionState();
+  State<NewTransaction> createState() {
+    print('createState new');
+    return _NewTransactionState();
+  }
 }
 
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
+  _NewTransactionState() {
+    print('constructor new');
+  }
+  @override
+  void initState() {
+    print('initstate()');
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(NewTransaction oldWidget) {
+    print("update");
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    print("dispose");
+    super.dispose();
+  }
 
   void _submitData() {
     final enteredTitle = _titleController.text;
@@ -56,7 +81,7 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 10,
             left: 10,
             right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom +10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
