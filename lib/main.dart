@@ -4,7 +4,6 @@ import './models/transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -77,11 +76,52 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildLandscapeContent(
+    double availableHeight,
+    Widget txListWidget,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Show Chart"),
+          Switch.adaptive(
+            activeColor: Colors.amber,
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          ),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: availableHeight * 0.5,
+              child: Chart(_recentTransactions),
+            )
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPortaitContant(
+    double availableHeight,
+    Widget txListWidget,
+  ) {
+    return [
+      Container(
+        height: availableHeight * 0.5,
+        child: Chart(_recentTransactions),
+      ),
+      txListWidget
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final isLandscape =
-        mediaQuery.orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text('personal Expenses'),
       actions: [
@@ -97,10 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
         mediaQuery.padding.top;
 
     final txListWidget = Container(
-                    height: availableHeight * 1,
-                    child:
-                        TransactionList(_userTransactions, _deleteTransaction),
-                  );
+      height: availableHeight * 1,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
 
     return Scaffold(
       appBar: appBar,
@@ -110,32 +149,15 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Show Chart"),
-                  Switch.adaptive(
-                    activeColor: Colors.amber,
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  ),
-                ],
+              ..._buildLandscapeContent(
+                availableHeight,
+                txListWidget,
               ),
-              if(!isLandscape)Container(
-                    height: availableHeight * 0.5,
-                    child: Chart(_recentTransactions),
-                  ),
-                  if (!isLandscape)txListWidget,
-                  if(isLandscape)_showChart 
-                ? Container(
-                    height: availableHeight * 0.5,
-                    child: Chart(_recentTransactions),
-                  )
-                : txListWidget
+            if (!isLandscape)
+              ..._buildPortaitContant(
+                availableHeight,
+                txListWidget,
+              ),
           ],
         ),
       ),
